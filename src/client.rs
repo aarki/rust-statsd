@@ -136,6 +136,11 @@ impl Client {
         self.send(data);
     }
 
+    pub fn rated_count(&self, metric: &str, value: f64, rate: f64) {
+        let data = self.prepare(format!("{}:{}|c|@{}", metric, value, rate));
+        self.send(data);
+    }
+
     /// Set a gauge value.
     ///
     /// ```ignore
@@ -311,6 +316,11 @@ impl Pipeline {
         if rand::random::<f64>() >= rate {
             return;
         }
+        let data = format!("{}:{}|c|@{}", metric, value, rate);
+        self.stats.push_back(data);
+    }
+
+    pub fn rated_count(&mut self, metric: &str, value: f64, rate: f64) {
         let data = format!("{}:{}|c|@{}", metric, value, rate);
         self.stats.push_back(data);
     }
